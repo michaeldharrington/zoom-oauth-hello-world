@@ -8,7 +8,6 @@ const app = express()
 // Use the request module to make HTTP requests from Node
 const request = require('request')
 
-
 app.get('/', (req, res) => {
     
     // Step 1: 
@@ -18,40 +17,37 @@ app.get('/', (req, res) => {
 
     if (req.query.code) {
   
-        // STEP 3
+        // Step 3: 
         // Request an access token using the auth code
         
         let url = 'https://zoom.us/oauth/token?grant_type=authorization_code&code=' + req.query.code + '&redirect_uri=' + process.env.redirectURL;
 
-        request.post(url, function (error, response, body) {
+        request.post(url, (error, response, body) => {
 
-            // the response should be a JSON payload
+            // Parse response to JSON
             body = JSON.parse(body);
 
-            //html for displaying response in the browser
-            //Prettify the JSON format using pre tag and JSON.stringify
-
-            // Log your access and refresh tokens in the browser
+            // Logs your access and refresh tokens in the browser
             console.log(`access_token: ${body.access_token}`);
             console.log(`refresh_token: ${body.refresh_token}`);
 
             if (body.access_token) {
 
-                // STEP 4
+                // Step 4:
                 // We can now use the access token to authenticate API calls
 
                 // Send a request to get your user information using the /me context
                 // The `/me` context restricts an API call to the user the token belongs to
                 // This helps make calls to user-specific endpoints instead of storing the userID
 
-                request.get('https://api.zoom.us/v2/users/me', function (error, response, body) {
+                request.get('https://api.zoom.us/v2/users/me', (error, response, body) => {
                     if (error) {
                         console.log('API Response Error: ', error)
                     } else {
                         body = JSON.parse(body);
-                        //display response in console
+                        // Display response in console
                         console.log('API call ', body);
-                        //display response in browser
+                        // Display response in browser
                         var JSONResponse = '<code><pre>' + JSON.stringify(body, null, 2) + '</pre></code>'
                         res.send(`
                             <style>
@@ -75,9 +71,7 @@ app.get('/', (req, res) => {
                                 </div>
                             </div>
                         `);
-
                     }
-
                 }).auth(null, null, true, body.access_token);
 
             } else {
@@ -87,10 +81,6 @@ app.get('/', (req, res) => {
         }).auth(process.env.clientID, process.env.clientSecret);
 
         return;
-
-
-
-
 
     }
 
