@@ -4,6 +4,12 @@ This is a Hello World app using an OAuth Marketplace App client ID and Secret to
 
 [Zoom App Marketplace](https://marketplace.zoom.us)
 
+Readme todo:
+- Setup ngrok
+- Setup Marketplace OAuth app
+- Use ngrok forwarding for Redirect URL 
+- Walk through install steps
+
 ## Setup 
 
 Run server using [nodemon](/)
